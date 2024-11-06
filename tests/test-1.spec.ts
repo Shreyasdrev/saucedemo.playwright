@@ -1,0 +1,30 @@
+import { test, expect } from '@playwright/test';
+
+test('verify end to end flow to checkout', async ({ page }) => {
+  await page.locator('body').click();
+  await page.goto('https://www.saucedemo.com/v1/index.html');
+  await page.locator('[data-test="username"]').click();
+  await page.locator('[data-test="username"]').fill('standard_user');
+  await page.locator('[data-test="password"]').click();
+  await page.locator('[data-test="password"]').fill('secret_sauce');
+  await page.getByRole('button', { name: 'LOGIN' }).click();
+  await page.locator('div').filter({ hasText: /^\$29\.99ADD TO CART$/ }).getByRole('button').click();
+  await page.getByRole('link', { name: '1' }).click();
+  await page.getByRole('link', { name: 'Continue Shopping' }).click();
+  await page.locator('div').filter({ hasText: /^\$9\.99ADD TO CART$/ }).getByRole('button').click();
+  await page.getByRole('button', { name: 'ADD TO CART' }).first().click();
+  await page.locator('div').filter({ hasText: /^\$49\.99ADD TO CART$/ }).getByRole('button').click();
+  await page.locator('div').filter({ hasText: /^\$7\.99ADD TO CART$/ }).getByRole('button').click();
+  await page.getByRole('button', { name: 'ADD TO CART' }).click();
+  await page.getByRole('link', { name: '6' }).click();
+  await page.getByRole('link', { name: 'CHECKOUT' }).click();
+  await page.locator('[data-test="firstName"]').click();
+  await page.locator('[data-test="firstName"]').fill('Shreyas');
+  await page.locator('[data-test="lastName"]').click();
+  await page.locator('[data-test="lastName"]').fill('R');
+  await page.locator('[data-test="postalCode"]').click();
+  await page.locator('[data-test="postalCode"]').fill('hhg21266');
+  await page.getByRole('button', { name: 'CONTINUE' }).click();
+  await page.getByRole('link', { name: 'FINISH' }).click();
+  await expect(page.getByRole('heading', { name: 'THANK YOU FOR YOUR ORDER' })).toHaveText('THANK YOU FOR YOUR ORDER');
+});
